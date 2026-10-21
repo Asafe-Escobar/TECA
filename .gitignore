@@ -1,0 +1,15 @@
+# Local previews and backups
+index.before-*.html
+images/teca/before-quality/
+images/teca/restored/*.png
+QUALIDADE-MIDIA.md
+ABRIR-SITE.bat
+LEIA-ME.txt
+Thumbs.db
+desktop.ini
+.DS_Store
+.env
+.env.*
+
+# Replaced video retained locally as a backup
+images/teca/hero-bg.mp4

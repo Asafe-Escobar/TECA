@@ -1,0 +1,20 @@
+/* Preserve the original single-image slots and all Elementor columns. */
+.teca-quality-image{display:block;position:relative;width:var(--photo-width);max-width:100%;min-width:0;aspect-ratio:var(--photo-ratio);overflow:hidden;border-radius:12px;isolation:isolate}
+.teca-quality-image>img{position:absolute!important;inset:0;display:block;width:100%!important;max-width:100%!important;height:100%!important;object-fit:cover;object-position:center 45%;border-radius:inherit}
+.teca-quality-image::after{content:"";position:absolute;inset:30% 0 0;background:linear-gradient(transparent,rgba(1,1,25,.9));pointer-events:none}
+.teca-quality-caption{position:absolute;inset:auto 12px 18px;z-index:1;display:block;text-align:center;font-family:Sora,sans-serif;font-style:normal;color:#fff;line-height:1.2}
+.teca-quality-caption>b{display:block;color:#00a5f5;font-size:clamp(42px,5vw,76px);font-weight:800}
+.teca-quality-caption>span{display:block;font-size:clamp(14px,1.5vw,22px);font-weight:700;text-wrap:balance}
+.swiper-slide-inner>img:is([src*="frames-native/"],[src*="restored/"]){width:100%!important;height:auto!important;aspect-ratio:16/9;object-fit:cover;object-position:center 45%}
+@media(max-width:767px){.teca-quality-caption{bottom:14px}.teca-quality-caption>b{font-size:42px}.teca-quality-caption>span{font-size:14px}}
+/* Keep faces inside the existing landscape frames. No change to slot sizes. */
+.teca-quality-image>img[src*="v19_012"]{object-position:50% 30%}
+.swiper-slide-inner>img[src*="v22_003"],.swiper-slide-inner>img[src*="v17_004"],.swiper-slide-inner>img[src*="v21_009"],.swiper-slide-inner>img[src*="v20_011"],.swiper-slide-inner>img[src*="v23_003"]{object-position:50% 12%}
+.swiper-slide-inner>img[src*="v18_014"]{object-position:50% 10%}
+.swiper-slide-inner>img[src*="v19_012"]{object-position:50% 30%}
+.swiper-slide-inner>img[src*="v02_019"]{object-position:50% 20%}
+.swiper-slide-inner>img[src*="v15_003"]{object-position:50% 55%}
+
+/* Less cropping: four narrower event slides, with a 4:3 photo viewport. */
+.elementor-element-2e326ccc .swiper-slide-inner>img{aspect-ratio:4/3!important}
+.teca-quality-image>img[src*="v09_022"]{object-position:50% 48%}

@@ -28,11 +28,11 @@ const telefone = (v) => {
 module.exports = async (req, res) => {
   if (req.method !== "POST") return res.status(405).json({ ok: false });
   if (!SUPABASE_URL || !SERVICE_KEY) {
-    // Diagnóstico: só nomes de variáveis, nunca valores
+    // Diagnóstico no log da Vercel: só nomes de variáveis, nunca valores
     const faltando = [!SUPABASE_URL && "NEXT_PUBLIC_SUPABASE_URL", !SERVICE_KEY && "SUPABASE_SERVICE_ROLE_KEY"].filter(Boolean);
     const encontradas = Object.keys(process.env).filter(k => /supa|chave|next_pub/i.test(k));
     console.error("Supabase não configurado", { faltando, encontradas });
-    return res.status(500).json({ ok: false, faltando, encontradas });
+    return res.status(500).json({ ok: false });
   }
 
   const b = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};

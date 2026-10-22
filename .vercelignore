@@ -1,0 +1,10 @@
+.env
+.env.*
+index.before-*.html
+images/teca/before-quality/
+images/teca/restored/
+ABRIR-SITE.bat
+LEIA-ME.txt
+QUALIDADE-MIDIA.md
+dev-server.js
+limpar-teste.js

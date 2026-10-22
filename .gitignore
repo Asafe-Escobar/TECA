@@ -11,5 +11,3 @@ desktop.ini
 .env
 .env.*
 
-# Replaced video retained locally as a backup
-images/teca/hero-bg.mp4

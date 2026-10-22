@@ -1,0 +1,8 @@
+.teca-hero-start{position:absolute;z-index:3;bottom:16px;left:50%;transform:translateX(-50%);min-height:44px;padding:10px 18px;border:1px solid rgba(255,255,255,.55);border-radius:999px;background:rgba(14,5,6,.82);color:#fff;font:600 12px/1.3 Sora,sans-serif;cursor:pointer;white-space:nowrap}
+.teca-hero-start[hidden],.teca-media-play[hidden]{display:none!important}
+.teca-vsl video{display:block;width:100%;height:100%;object-fit:cover}
+.teca-turma{position:relative}
+.teca-media-play{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;width:100%;height:calc(100% - 48px);border:0;background:linear-gradient(transparent,rgba(0,6,42,.15));color:white;cursor:pointer;font:700 14px/1.4 Sora,sans-serif;text-shadow:0 1px 8px #000}
+.teca-media-play svg{width:72px;height:72px;padding:22px;border-radius:50%;background:#1f8f93;box-shadow:0 4px 32px rgba(0,0,0,.3);fill:white}
+.teca-video-original{display:block;margin:12px auto 0;text-align:center;font:500 12px/1.5 Sora,sans-serif;color:#8ddfe3;text-decoration:underline;text-underline-offset:3px}
+.teca-media-play:focus-visible,.teca-hero-start:focus-visible{outline:3px solid #fff;outline-offset:-5px}

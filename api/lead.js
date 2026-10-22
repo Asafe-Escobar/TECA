@@ -1,8 +1,10 @@
 // Recebe o cadastro da landing e grava o lead no CRM (tabelas leads + lead_eventos do Supabase).
 // Roda no servidor (Vercel Function): a service role nunca vai para o navegador.
 const { randomUUID } = require("crypto");
-const SUPABASE_URL = (process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || "").replace(/\/$/, "");
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+// Nome da variável sem diferenciar maiúsculas (o painel da Vercel às vezes grava em minúsculas)
+const env = (nome) => process.env[Object.keys(process.env).find(k => k.toUpperCase() === nome)] || "";
+const SUPABASE_URL = (env("SUPABASE_URL") || env("NEXT_PUBLIC_SUPABASE_URL")).trim().replace(/\/$/, "");
+const SERVICE_KEY = env("SUPABASE_SERVICE_ROLE_KEY").trim();
 const ORIGEM = "landing-teca";
 
 const db = async (path, opts = {}) => {

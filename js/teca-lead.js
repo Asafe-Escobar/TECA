@@ -21,7 +21,7 @@
           <input name="empresa" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
           <input class="tl-input" name="nome" type="text" placeholder="Nome completo" autocomplete="name" required>
           <input class="tl-input" name="email" type="email" placeholder="E-mail" autocomplete="email" required>
-          <input class="tl-input" name="whatsapp" type="tel" placeholder="(DDD) WhatsApp" autocomplete="tel" inputmode="numeric" required>
+          <input class="tl-input" name="whatsapp" type="tel" placeholder="(DDD) WhatsApp" autocomplete="tel" inputmode="numeric" maxlength="19" required>
           <div class="tl-row tl-only-medico">
             <input class="tl-input" name="crm" type="text" placeholder="Número do CRM" inputmode="numeric" maxlength="7">
             <select class="tl-input tl-uf" name="crm_uf" aria-label="UF do CRM"><option value="">UF</option>${UFS.map(u => `<option>${u}</option>`).join("")}</select>
@@ -78,7 +78,9 @@
 
   // Máscaras simples
   form.whatsapp.addEventListener("input", () => {
-    const d = form.whatsapp.value.replace(/\D/g, "").slice(0, 11);
+    let d = form.whatsapp.value.replace(/\D/g, "");
+    if (d.length > 11 && d.startsWith("55")) d = d.slice(2);  // digitou com DDI +55
+    d = d.slice(0, 11);
     form.whatsapp.value = d.length > 6 ? `(${d.slice(0, 2)}) ${d.slice(2, d.length - 4)}-${d.slice(-4)}` : d.length > 2 ? `(${d.slice(0, 2)}) ${d.slice(2)}` : d;
   });
   form.crm.addEventListener("input", () => { form.crm.value = form.crm.value.replace(/\D/g, "").slice(0, 7); });

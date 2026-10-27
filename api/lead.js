@@ -41,7 +41,6 @@ module.exports = async (req, res) => {
   const nome = txt(b.nome, 120);
   const email = txt(b.email, 160).toLowerCase();
   const tel = telefone(b.whatsapp);
-  const medico = b.perfil !== "aluno";
   if (nome.split(/\s+/).length < 2 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) || !tel) {
     return res.status(400).json({ ok: false, erro: "dados inválidos" });
   }
@@ -49,7 +48,7 @@ module.exports = async (req, res) => {
   const curso = txt(b.curso, 120) || "TECA SBC";
   const utm = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"].map(k => txt(b[k], 100) && `${k.slice(4)}=${txt(b[k], 100)}`).filter(Boolean).join(", ");
   const observacao = [
-    `[Landing TECA] ${medico ? `Médico(a), CRM ${txt(b.crm, 10)}/${txt(b.crm_uf, 2)}` : `Estudante, ${txt(b.periodo, 20)}`}`,
+    "[Landing TECA] Cadastro — estudantes somente a partir do 9º período",
     `E-mail: ${email}`,
     utm && `Campanha: ${utm}`,
   ].filter(Boolean).join(" | ");

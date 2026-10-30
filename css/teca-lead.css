@@ -27,3 +27,4 @@ select.tl-input{appearance:none;cursor:pointer;background-image:linear-gradient(
 /* o tema (reset/Elementor) estiliza input[type=...] com seletores mais fortes */
 .tl-modal input.tl-input,.tl-modal select.tl-input{height:54px !important;padding:0 22px !important;border:2px solid transparent !important;border-radius:999px !important;background-color:#F3EEEE !important;color:#1a0709 !important;font:500 15px "Sora",sans-serif !important;box-shadow:none !important}
 .tl-modal input.tl-input:focus,.tl-modal select.tl-input:focus{border-color:#2AACB0 !important}
+.tl-done-go{display:flex;align-items:center;justify-content:center;text-decoration:none}

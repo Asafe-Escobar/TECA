@@ -1,0 +1,32 @@
+/* Card de preço da Black Friday (seção #ingresso) */
+.teca-bf{position:relative;width:100%;margin:22px 0 4px;padding:22px 18px 20px;border-radius:14px;background:radial-gradient(120% 90% at 50% 0%,#1d1d1f 0%,#0b0b0c 70%);box-shadow:0 14px 34px rgba(0,0,0,.28),inset 0 0 0 1px rgba(42,172,176,.35);color:#fff;text-align:center;font-family:"Sora",sans-serif;overflow:hidden}
+.teca-bf p{margin:0}
+
+.teca-bf-tag{display:inline-block;position:relative;overflow:hidden;padding:6px 16px;border-radius:999px;background:linear-gradient(180deg,#2AACB0 0%,#1A7276 100%);font-size:13px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:#fff}
+.teca-bf-tag span{position:relative}
+.teca-bf-tag::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:teca-bf-sweep 3.6s ease-in-out infinite}
+@keyframes teca-bf-sweep{0%{left:-60%}40%,100%{left:130%}}
+
+.teca-bf-label{margin-top:12px !important;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.6)}
+
+.teca-bf-de{margin-top:10px !important;font-size:14px;color:rgba(255,255,255,.65)}
+.teca-bf s{color:rgba(255,255,255,.55);text-decoration-color:#e5484d;text-decoration-thickness:2px}
+.teca-bf-de s{font-weight:600}
+
+.teca-bf-preco{display:flex;align-items:flex-start;justify-content:center;gap:6px;margin-top:10px;line-height:1}
+.teca-bf-x{align-self:center;font-size:15px;font-weight:700;line-height:1.05;text-align:right;text-transform:uppercase;color:rgba(255,255,255,.75)}
+.teca-bf-rs{margin-top:10px;font-size:20px;font-weight:700;color:#2AACB0}
+.teca-bf-int{font-size:76px;font-weight:800;letter-spacing:-3px;color:#fff;text-shadow:0 0 28px rgba(42,172,176,.45)}
+.teca-bf-cent{margin-top:8px;font-size:26px;font-weight:800;color:#fff}
+
+.teca-bf-juros{margin-top:4px !important;font-size:15px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#2AACB0}
+.teca-bf-vista{margin-top:14px !important;padding-top:12px;border-top:1px solid rgba(255,255,255,.12);font-size:14px;color:rgba(255,255,255,.75)}
+.teca-bf-vista b{color:#fff;font-weight:700}
+
+@media (max-width:767px){
+  .teca-bf{padding:20px 12px 18px}
+  .teca-bf-int{font-size:64px}
+}
+@media (prefers-reduced-motion:reduce){
+  .teca-bf-tag::after{animation:none}
+}

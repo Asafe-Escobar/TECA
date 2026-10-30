@@ -2,6 +2,8 @@
 (() => {
   // Endpoint serverless (api/lead.js) que grava o lead no CRM. A chave do Supabase fica só no servidor.
   const CRM_ENDPOINT = "/api/lead";
+  // Link de pagamento (oferta Black Friday). Depois do cadastro, a pessoa segue para cá.
+  const CHECKOUT_URL = "https://linha.medsafebrasil.com.br/comprar/4AJ2FPZ";
 
   const html = `
   <div class="tl-overlay" hidden>
@@ -23,8 +25,8 @@
       <div class="tl-step tl-done-step" hidden>
         <div class="tl-check" aria-hidden="true">✓</div>
         <h2>Cadastro recebido!</h2>
-        <p>Obrigado, <strong class="tl-done-name"></strong>. Nossa equipe vai entrar em contato com você pelo WhatsApp em breve para concluir a sua inscrição no TECA.</p>
-        <button class="tl-submit tl-done-close" type="button">FECHAR</button>
+        <p>Obrigado, <strong class="tl-done-name"></strong>. Estamos te levando para o pagamento com a condição de Black Friday...</p>
+        <a class="tl-submit tl-done-go" href="${CHECKOUT_URL}">IR PARA O PAGAMENTO</a>
       </div>
     </div>
   </div>`;
@@ -42,14 +44,14 @@
   // Todos os botões de inscrição/checkout abrem o formulário
   const isCta = (a) => {
     const href = a.getAttribute("href") || "";
-    return href === "#ingresso" || /ensino\.medsafebrasil\.com\.br\/matricula/.test(href);
+    if (a.closest(".tl-overlay")) return false;  // o botão "ir para o pagamento" do próprio modal
+    return href === "#ingresso" || /medsafebrasil\.com\.br\/(matricula|comprar)/.test(href);
   };
   document.addEventListener("click", (e) => {
     const a = e.target.closest("a");
     if (a && isCta(a)) open(e);
   }, true);
   overlay.querySelector(".tl-close").addEventListener("click", close);
-  overlay.querySelector(".tl-done-close").addEventListener("click", close);
   overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !overlay.hidden) close(); });
 
@@ -101,8 +103,13 @@
       overlay.querySelector(".tl-form-step").hidden = true;
       overlay.querySelector(".tl-done-step").hidden = false;
       form.reset();
-      if (window.fbq) window.fbq("track", "Lead");
+      if (window.fbq) {
+        window.fbq("track", "Lead");
+        window.fbq("track", "InitiateCheckout", { value: 1499, currency: "BRL" });
+      }
       if (window.dataLayer) window.dataLayer.push({ event: "lead_teca", perfil: "cadastro" });
+      // Dá tempo do pixel sair antes de trocar de página
+      setTimeout(() => { location.href = CHECKOUT_URL; }, 1500);
     } catch (x) {
       console.error("Falha ao enviar lead:", x);
       fail("Não foi possível concluir agora. Tente novamente ou fale com a equipe pelo WhatsApp.");

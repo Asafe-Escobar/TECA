@@ -77,9 +77,14 @@
     return o;
   };
 
+  // Tenta gravar no CRM por até 5s; o resultado não bloqueia o checkout
   const send = async (lead) => {
-    const r = await fetch(CRM_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(lead) });
-    if (!r.ok) throw new Error("HTTP " + r.status);
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 5000);
+    try {
+      const r = await fetch(CRM_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(lead), signal: ctrl.signal });
+      if (!r.ok) throw new Error("HTTP " + r.status);
+    } finally { clearTimeout(t); }
   };
 
   form.addEventListener("submit", async (e) => {
@@ -97,24 +102,19 @@
       ...utm(),
     };
     submit.disabled = true; submit.textContent = "ENVIANDO...";
-    try {
-      await send(lead);
-      overlay.querySelector(".tl-done-name").textContent = lead.nome.split(" ")[0];
-      overlay.querySelector(".tl-form-step").hidden = true;
-      overlay.querySelector(".tl-done-step").hidden = false;
-      form.reset();
-      if (window.fbq) {
-        window.fbq("track", "Lead");
-        window.fbq("track", "InitiateCheckout", { value: 1499, currency: "BRL" });
-      }
-      if (window.dataLayer) window.dataLayer.push({ event: "lead_teca", perfil: "cadastro" });
-      // Dá tempo do pixel sair antes de trocar de página
-      setTimeout(() => { location.href = CHECKOUT_URL; }, 1500);
-    } catch (x) {
-      console.error("Falha ao enviar lead:", x);
-      fail("Não foi possível concluir agora. Tente novamente ou fale com a equipe pelo WhatsApp.");
-    } finally {
-      submit.disabled = false; submit.textContent = "QUERO ME INSCREVER";
+    // Se o CRM falhar (no GitHub Pages /api/lead não existe), a pessoa segue para o pagamento mesmo assim
+    try { await send(lead); } catch (x) { console.error("Falha ao enviar lead:", x); }
+    overlay.querySelector(".tl-done-name").textContent = lead.nome.split(" ")[0];
+    overlay.querySelector(".tl-form-step").hidden = true;
+    overlay.querySelector(".tl-done-step").hidden = false;
+    form.reset();
+    submit.disabled = false; submit.textContent = "QUERO ME INSCREVER";
+    if (window.fbq) {
+      window.fbq("track", "Lead");
+      window.fbq("track", "InitiateCheckout", { value: 1499, currency: "BRL" });
     }
+    if (window.dataLayer) window.dataLayer.push({ event: "lead_teca", perfil: "cadastro" });
+    // Dá tempo do pixel sair antes de trocar de página
+    setTimeout(() => { location.href = CHECKOUT_URL; }, 1500);
   });
 })();

@@ -2,8 +2,6 @@
 (() => {
   // Endpoint serverless (api/lead.js) que grava o lead no CRM. A chave do Supabase fica só no servidor.
   const CRM_ENDPOINT = "/api/lead";
-  // Link de pagamento (oferta Black Friday). Depois do cadastro, a pessoa segue para cá.
-  const CHECKOUT_URL = "https://linha.medsafebrasil.com.br/comprar/4AJ2FPZ";
 
   const html = `
   <div class="tl-overlay" hidden>
@@ -11,7 +9,8 @@
       <button class="tl-close" type="button" aria-label="Fechar">×</button>
       <img class="tl-logo" src="images/teca/teca-logo-branca.webp" alt="TECA SBC">
       <div class="tl-step tl-form-step">
-        <h2 id="tl-title"><span>Preencha os dados abaixo</span><br>para garantir a sua vaga</h2>
+        <h2 id="tl-title"><span>Lista de espera</span><br>para a próxima turma TECA SBC</h2>
+        <p class="tl-intro">As vagas de 7 e 8 de novembro estão encerradas. Cadastre-se para receber novidades sobre a próxima turma. A inscrição na lista não garante uma vaga.</p>
         <form class="tl-form" novalidate>
           <input name="empresa" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
           <input class="tl-input" name="nome" type="text" placeholder="Nome completo" autocomplete="name" required>
@@ -19,14 +18,14 @@
           <input class="tl-input" name="whatsapp" type="tel" placeholder="(DDD) WhatsApp" autocomplete="tel" inputmode="numeric" maxlength="19" required>
           <p class="tl-note"><strong>ATENÇÃO:</strong> estudantes podem se inscrever somente a partir do 9º período.</p>
           <p class="tl-error" role="alert" hidden></p>
-          <button class="tl-submit" type="submit">QUERO ME INSCREVER</button>
+          <button class="tl-submit" type="submit">ENTRAR NA LISTA DE ESPERA</button>
         </form>
       </div>
       <div class="tl-step tl-done-step" hidden>
         <div class="tl-check" aria-hidden="true">✓</div>
-        <h2>Cadastro recebido!</h2>
-        <p>Obrigado, <strong class="tl-done-name"></strong>. Estamos te levando para o pagamento com a condição de Black Friday...</p>
-        <a class="tl-submit tl-done-go" href="${CHECKOUT_URL}">IR PARA O PAGAMENTO</a>
+        <h2>Você está na lista de espera!</h2>
+        <p>Obrigado, <strong class="tl-done-name"></strong>. Recebemos seu interesse na próxima turma TECA SBC. Entraremos em contato pelos dados informados quando houver novidades.</p>
+        <button class="tl-submit tl-done-go" type="button">CONCLUIR</button>
       </div>
     </div>
   </div>`;
@@ -45,13 +44,14 @@
   const isCta = (a) => {
     const href = a.getAttribute("href") || "";
     if (a.closest(".tl-overlay")) return false;  // o botão "ir para o pagamento" do próprio modal
-    return href === "#ingresso" || /medsafebrasil\.com\.br\/(matricula|comprar)/.test(href);
+    return href === "#lista-espera" || href === "#ingresso" || /medsafebrasil\.com\.br\/(matricula|comprar)/.test(href);
   };
   document.addEventListener("click", (e) => {
     const a = e.target.closest("a");
     if (a && isCta(a)) open(e);
   }, true);
   overlay.querySelector(".tl-close").addEventListener("click", close);
+  overlay.querySelector(".tl-done-go").addEventListener("click", close);
   overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !overlay.hidden) close(); });
 
@@ -77,13 +77,14 @@
     return o;
   };
 
-  // Tenta gravar no CRM por até 5s; o resultado não bloqueia o checkout
+  // Só confirma a inscrição após o CRM aceitar o cadastro.
   const send = async (lead) => {
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), 5000);
     try {
       const r = await fetch(CRM_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(lead), signal: ctrl.signal });
       if (!r.ok) throw new Error("HTTP " + r.status);
+      if (!(await r.json()).ok) throw new Error("Cadastro não confirmado");
     } finally { clearTimeout(t); }
   };
 
@@ -94,7 +95,8 @@
       nome: form.nome.value.trim(),
       email: form.email.value.trim().toLowerCase(),
       whatsapp: "+55" + form.whatsapp.value.replace(/\D/g, ""),
-      curso: "TECA SBC — 7 e 8 de Novembro",
+      curso: "TECA SBC — Lista de espera — próxima turma",
+      interesse: "lista_espera",
       origem: "landing-teca",
       pagina: location.href,
       enviado_em: new Date().toISOString(),
@@ -102,19 +104,20 @@
       ...utm(),
     };
     submit.disabled = true; submit.textContent = "ENVIANDO...";
-    // Se o CRM falhar (no GitHub Pages /api/lead não existe), a pessoa segue para o pagamento mesmo assim
-    try { await send(lead); } catch (x) { console.error("Falha ao enviar lead:", x); }
+    try { await send(lead); } catch (x) {
+      console.error("Falha ao enviar cadastro à lista de espera");
+      submit.disabled = false; submit.textContent = "ENTRAR NA LISTA DE ESPERA";
+      fail("Não foi possível confirmar sua inscrição. Tente novamente. Seus dados continuam preenchidos.");
+      return;
+    }
     overlay.querySelector(".tl-done-name").textContent = lead.nome.split(" ")[0];
     overlay.querySelector(".tl-form-step").hidden = true;
     overlay.querySelector(".tl-done-step").hidden = false;
     form.reset();
-    submit.disabled = false; submit.textContent = "QUERO ME INSCREVER";
+    submit.disabled = false; submit.textContent = "ENTRAR NA LISTA DE ESPERA";
     if (window.fbq) {
       window.fbq("track", "Lead");
-      window.fbq("track", "InitiateCheckout", { value: 1499, currency: "BRL" });
     }
-    if (window.dataLayer) window.dataLayer.push({ event: "lead_teca", perfil: "cadastro" });
-    // Dá tempo do pixel sair antes de trocar de página
-    setTimeout(() => { location.href = CHECKOUT_URL; }, 1500);
+    if (window.dataLayer) window.dataLayer.push({ event: "lead_teca", perfil: "lista_espera", turma: "proxima" });
   });
 })();

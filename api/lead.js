@@ -45,14 +45,16 @@ module.exports = async (req, res) => {
     return res.status(400).json({ ok: false, erro: "dados inválidos" });
   }
 
-  const curso = txt(b.curso, 120) || "TECA SBC";
+  // Esta landing recebe exclusivamente interessados na próxima turma.
+  const curso = "TECA SBC — Lista de espera — próxima turma";
   const utm = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"].map(k => txt(b[k], 100) && `${k.slice(4)}=${txt(b[k], 100)}`).filter(Boolean).join(", ");
   const observacao = [
-    "[Landing TECA] Cadastro — estudantes somente a partir do 9º período",
+    "[LISTA DE ESPERA] TECA SBC — próxima turma. Vagas de 7 e 8 de novembro encerradas.",
+    "Interesse: receber novidades sobre a próxima turma. Cadastro não garante vaga.",
     `E-mail: ${email}`,
     utm && `Campanha: ${utm}`,
   ].filter(Boolean).join(" | ");
-  const nota = `Cadastro pela landing TECA${utm ? ` (${utm})` : ""}`;
+  const nota = `Lista de espera TECA SBC — próxima turma${utm ? ` (${utm})` : ""}`;
   const agora = new Date().toISOString();
 
   try {

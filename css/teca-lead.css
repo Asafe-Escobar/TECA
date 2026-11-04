@@ -28,3 +28,12 @@ select.tl-input{appearance:none;cursor:pointer;background-image:linear-gradient(
 .tl-modal input.tl-input,.tl-modal select.tl-input{height:54px !important;padding:0 22px !important;border:2px solid transparent !important;border-radius:999px !important;background-color:#F3EEEE !important;color:#1a0709 !important;font:500 15px "Sora",sans-serif !important;box-shadow:none !important}
 .tl-modal input.tl-input:focus,.tl-modal select.tl-input:focus{border-color:#2AACB0 !important}
 .tl-done-go{display:flex;align-items:center;justify-content:center;text-decoration:none}
+
+/* Encerramento da turma e lista de espera */
+.teca-wait-notice{position:relative;z-index:10;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 24px;padding:18px 24px;background:#211014;border-bottom:2px solid #2aacb0;color:#fff;text-align:center;font:500 14px/1.5 "Sora",sans-serif}
+.teca-wait-notice strong{color:#ffe4a0}.teca-wait-notice a{padding:10px 18px;border-radius:24px;background:#2aacb0;color:#fff;font-size:12px;font-weight:800;text-decoration:none}
+.teca-wait-card{width:100%;padding:28px 22px;text-align:center;color:#fff;font-family:"Sora",sans-serif;border:1px solid #2aacb0;border-radius:20px;background:linear-gradient(160deg,#321117,#100608);scroll-margin-top:24px}
+.teca-wait-badge{display:inline-block;padding:8px 14px;margin-bottom:18px;border-radius:20px;background:#ffe4a0;color:#321117;font-size:12px;font-weight:800;letter-spacing:1px}
+.teca-wait-card h3{font-size:24px;line-height:1.4;color:#fff;margin:0 0 18px}.teca-wait-card p{font-size:16px;line-height:1.65}.teca-wait-card .teca-wait-detail{font-size:13px;color:#d8caca}
+.tl-intro{font-size:14px;line-height:1.6;margin:0 0 20px;color:#e5dada}.tl-done-go{width:100%}.tl-submit{height:auto;min-height:60px;padding:14px 18px;line-height:1.4}
+@media(max-width:520px){.teca-wait-notice{padding:16px;font-size:12px}.teca-wait-notice a{width:100%}.teca-wait-card h3{font-size:21px}.tl-submit{font-size:14px}}
